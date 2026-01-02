@@ -19,10 +19,10 @@ jobs:
         working-directory: my-app
         run: |
           echo "Stopping existing containers..."
-          docker compose down --remove-orphans
+          docker-compose down
           
           echo "Building and starting new containers..."
-          docker compose up -d --build
+          docker-compose up -d --build
           
       - name: Verify Deployment
         run: |
