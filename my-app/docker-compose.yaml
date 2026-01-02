@@ -35,6 +35,7 @@ services:
     environment:
       - WATCHPACK_POLLING=true
       - WDS_SOCKET_PORT=0
+      - NODE_OPTIONS=--openssl-legacy-provider
     command: npm start
 
 volumes:
