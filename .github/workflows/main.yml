@@ -1,0 +1,37 @@
+name: 3-Tier App Local Deploy
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Build and Deploy on Runner
+    runs-on: self-hosted
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Deploy with Docker Compose
+        working-directory: my-app
+        run: |
+          echo "Stopping existing containers..."
+          docker compose down --remove-orphans
+          
+          echo "Building and starting new containers..."
+          docker compose up -d --build
+          
+      - name: Verify Deployment
+        run: |
+          echo "Waiting for services to be ready..."
+          sleep 10
+          docker ps
+          
+          echo "Checking Backend Health..."
+          curl -f http://localhost:5000/ || echo "Backend check failed (expected if root has no route)"
+          
+          echo "Checking Frontend Health..."
+          curl -f http://localhost:3001/ || echo "Frontend check failed"
